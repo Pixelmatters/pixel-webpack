@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "@types/node": "^7.0.0",
+    "css-loader": "^0.26.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "html-loader": "^0.4.4",
+    "html-webpack-plugin": "^2.26.0",
+    "node-sass": "^4.3.0",
+    "sass-loader": "^4.1.1",
+    "style-loader": "^0.13.1",
+    "ts-loader": "^1.3.3",
+    "typescript": "^2.1.5",
+    "webpack": "^1.14.0"
+  },
+  "name": "tutWebpack",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT"
+}
