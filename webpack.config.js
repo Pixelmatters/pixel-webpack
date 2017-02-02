@@ -1,19 +1,65 @@
 const webpack = require('webpack')
 // const NotifierPlugin = require('webpack-notifier')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const FriendlyErrors = require('friendly-errors-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const plugins = [];
 
 plugins.push(
   new webpack.DefinePlugin({
-    DEVMODE: true
+    'process.env': {dev: true}
   }),
   new HtmlWebpackPlugin({
     template: './index.html',
-    inject: 'body'
+    inject: 'body',
+    minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+        // more options:
+        // https://github.com/kangax/html-minifier#options-quick-reference
+      },
   }),
-  new ExtractTextPlugin('[name].css')
+  new webpack.optimize.OccurrenceOrderPlugin(),
+  new ExtractTextPlugin('/assets/css/[name].[contenthash].css'),
+  new webpack.HotModuleReplacementPlugin(),
+  new webpack.IgnorePlugin(/spec\.(js|ts)$/),
+  new webpack.NoErrorsPlugin(),
+  new webpack.optimize.UglifyJsPlugin({
+        mangle: true
+      }),
+  // split vendor js into its own file
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'vendor',
+    minChunks: function (module, count) {
+      // any required modules inside node_modules are extracted to vendor
+      return (
+        module.resource &&
+        /\.js$/.test(module.resource) &&
+        module.resource.indexOf(
+          path.join(__dirname, './node_modules')
+        ) === 0
+      )
+    }
+  }),
+  new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      chunks: ['vendor']
+    }),
+  new ExtractTextPlugin('[name].[hash].css'),
+  new FriendlyErrors(),
+  new CompressionWebpackPlugin({
+      asset: '[path].gz[query]',
+      algorithm: 'gzip',
+      test: new RegExp(
+        '\\.(' +
+        ['js', 'css'].join('|') +
+        ')$'
+      ),
+      threshold: 10240,
+      minRatio: 0.8
+    })
 );
 
 const preLoaders = [{
@@ -79,6 +125,11 @@ const loaders = [{
   }
 ]
 
+// add hot-reload related code to entry chunks
+Object.keys(baseWebpackConfig.entry).forEach(function (name) {
+  baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name])
+})
+
 const config = {
   entry: './src/entry.ts',
   output: {
@@ -97,6 +148,7 @@ const config = {
     preLoaders,
     loaders
   },
+  devtool: '#eval-source-map',
   plugins,
   postcss
 }
