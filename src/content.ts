@@ -1,2 +1,3 @@
-const text = 'It works from the content js';
-export default text;
+
+export const text = 'It works from the content js';
+
