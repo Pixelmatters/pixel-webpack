@@ -17,6 +17,15 @@ const loaders = [{
     exclude: /node_modules/,
     loaders: ['style-loader', 'css-loader', 'sass-loader', 'postcss-loader']
   },
+  {
+    test: /\.js$/,
+    loader: 'babel-loader',
+    include: [config.dev.sourcePath],
+    exclude: /node_modules/,
+    query: {
+      presets: ['es2015', 'react', 'react-hmre']
+    }
+  },
   // {
   //   test: /\.less$/,
   //   exclude: /node_modules/,
@@ -33,7 +42,7 @@ const plugins = [
   new webpack.NoErrorsPlugin(),
   new HtmlWebpackPlugin({
     filename: 'index.html',
-    template: 'index.html',
+    template: path.join(config.dev.sourcePath, 'index.html'),
     inject: true
   }),
   new FriendlyErrors()

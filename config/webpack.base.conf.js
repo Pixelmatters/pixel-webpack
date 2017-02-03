@@ -9,7 +9,7 @@ const loaders = [
     include: [config.dev.sourcePath],
     exclude: /node_modules/,
     query: {
-      presets: ['es2015']
+      presets: ['es2015', 'react']
     }
   },
   {
