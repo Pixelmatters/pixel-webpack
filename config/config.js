@@ -16,7 +16,7 @@ module.exports = {
     productionGzipExtensions: ['js', 'css']
   },
   dev: {
-    entryPoint: 'entry.ts',
+    entryPoint: 'index.tsx',
     sourcePath: path.resolve(__dirname, '../src'),
     env: {},
     port: 8080,

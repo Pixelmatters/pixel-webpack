@@ -1,6 +1,22 @@
-import React, {PropTypes} from 'react';
+import * as React from 'react';
 
-const SelectInput = ({name, label, onChange, defaultOption, value, error, options}) => {
+interface IOptions {
+  value: string;
+  text: string;
+}
+
+interface IProps {
+  name: string; 
+  label: string; 
+  onChange: any;
+  defaultOption?: Object;
+  value: string;
+  error: string; 
+  options: Array<IOptions>;
+}
+
+
+const SelectInput = ({name, label, onChange, defaultOption, value, error, options}: IProps) => {
     return (
         <div className="form-group">
             <label htmlFor={name}>{label}</label>
@@ -21,14 +37,14 @@ const SelectInput = ({name, label, onChange, defaultOption, value, error, option
     );
 };
 
-SelectInput.propTypes = {
-    name: PropTypes.string.isRequired, 
-    label: PropTypes.string.isRequired, 
-    onChange: PropTypes.func.isRequired, 
-    defaultOption: PropTypes.string,
-    value: PropTypes.string, 
-    error: PropTypes.string,
-    options: PropTypes.arrayOf(PropTypes.object)
-};
+/*(<any>SelectInput).propTypes = {
+    name: React.PropTypes.string.isRequired, 
+    label: React.PropTypes.string.isRequired, 
+    onChange: React.PropTypes.func.isRequired, 
+    defaultOption: React.PropTypes.string,
+    value: React.PropTypes.string, 
+    error: React.PropTypes.string,
+    options: React.PropTypes.arrayOf(PropTypes.object)
+};*/
 
 export default SelectInput;

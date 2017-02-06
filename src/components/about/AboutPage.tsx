@@ -1,6 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 
-class AboutPage extends React.Component {
+class AboutPage extends React.Component<null, null> {
     render () {
         return (
             <div className="jumbotron">

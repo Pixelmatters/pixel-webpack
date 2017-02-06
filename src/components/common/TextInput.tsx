@@ -1,6 +1,15 @@
-import React, {PropTypes} from 'react';
+import * as React from 'react';
 
-const TextInput = ({name, label, onChange, placeholder, value, error}) => {
+interface IProps {
+    name: string; 
+    label: string; 
+    onChange: any;
+    placeholder?: string;
+    value?: string; 
+    error?: string;
+};
+
+const TextInput = ({name, label, onChange, placeholder, value, error}: IProps) => {
 
     let wrapperClass = 'form-group';
     if(error && error.length >0) {
@@ -24,13 +33,13 @@ const TextInput = ({name, label, onChange, placeholder, value, error}) => {
     );
 };
 
-TextInput.propTypes = {
-    name: PropTypes.string.isRequired, 
-    label: PropTypes.string.isRequired, 
-    onChange: PropTypes.func.isRequired, 
-    placeholder: PropTypes.string, 
-    value: PropTypes.string, 
-    error: PropTypes.string
-};
+/*(<any>TextInput).propTypes = {
+    name: React.PropTypes.string.isRequired, 
+    label: React.PropTypes.string.isRequired, 
+    onChange: React.PropTypes.func.isRequired, 
+    placeholder: React.PropTypes.string, 
+    value: React.PropTypes.string, 
+    error: React.PropTypes.string
+};*/
 
 export default TextInput;

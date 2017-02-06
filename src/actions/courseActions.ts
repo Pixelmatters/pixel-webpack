@@ -43,12 +43,14 @@ export const loadCourses = () => {
     };
 };
 
-export const saveCourses = (course) => {
+const self = this;
+
+export const saveCourses = (course: any) => {
     return function(dispatch) {
-        return courseApi.saveCourses(course)
+        return courseApi.saveCourse(course)
             .then((savedCourse) => {
-                course.id ? dispatch(updateCoursesSuccess(savedCourse)) :
-                    dispatch(createCoursesSuccess(savedCourse));
+                course.id ? dispatch(self.updateCoursesSuccess(savedCourse)) :
+                    dispatch(self.createCoursesSuccess(savedCourse));
             })
             .catch(error => {
                 throw(error);

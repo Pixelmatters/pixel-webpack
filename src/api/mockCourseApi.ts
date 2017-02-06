@@ -3,7 +3,16 @@ import delay from './delay';
 // This file mocks a web API by working with the hard-coded data below.
 // It uses setTimeout to simulate the delay of an AJAX call.
 // All calls return promises.
-const courses = [
+interface ICourse {
+  id: string;
+  title: string;
+  watchHref: string;
+  authorId: string;
+  length: string;
+  category: string;
+}
+
+const courses: Array<ICourse> = [
   {
     id: "react-flux-building-applications",
     title: "Building Applications in React and Flux",
@@ -64,7 +73,7 @@ class CourseApi {
     });
   }
 
-  static saveCourse(course) {
+  static saveCourse(course: any) {
     course = Object.assign({}, course); // to avoid manipulating object passed in.
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -91,11 +100,11 @@ class CourseApi {
     });
   }
 
-  static deleteCourse(courseId) {
+  static deleteCourse(courseId: string) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         const indexOfCourseToDelete = courses.findIndex(course => {
-          course.id == courseId;
+          return course.id === courseId;
         });
         courses.splice(indexOfCourseToDelete, 1);
         resolve();

@@ -1,3 +1,4 @@
+const path = require('path');
 const config = require('./config');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -39,7 +40,7 @@ const plugins = [
   }),
   new webpack.optimize.OccurrenceOrderPlugin(),
   new webpack.HotModuleReplacementPlugin(),
-  new webpack.NoErrorsPlugin(),
+  // new webpack.NoErrorsPlugin(),
   new HtmlWebpackPlugin({
     filename: 'index.html',
     template: path.join(config.dev.sourcePath, 'index.html'),

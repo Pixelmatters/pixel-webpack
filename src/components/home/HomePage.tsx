@@ -1,7 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import {Link} from 'react-router';
 
-class HomePage extends React.Component {
+class HomePage extends React.Component<any, any> {
     render () {
         return (
             <div className="jumbotron">

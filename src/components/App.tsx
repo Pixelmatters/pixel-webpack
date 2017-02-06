@@ -1,7 +1,11 @@
-import React, {PropTypes} from 'react';
+import * as React from 'react';
 import Header from './common/Header';
 
-class App extends React.Component {
+interface IAppProps {
+  children: Object;
+}
+
+class App extends React.Component<IAppProps, null> {
     render () {
         return (
             <div className="container-fluid">
@@ -11,10 +15,6 @@ class App extends React.Component {
         );
     }
 }
-
-App.propTypes = {
-    children: PropTypes.object.isRequired
-};
 
 export default App;
  

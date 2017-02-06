@@ -1,10 +1,38 @@
-import React, {PropTypes} from 'react';
+import * as React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as courseActions from '../../actions/courseActions';
 import CourseForm from './CourseForm';
 
-class ManageCoursePage extends React.Component {
+interface ICourse {
+  id: string;
+  title: string;
+  watchHref: string;
+  authorId: string;
+  length: string;
+  category: string;
+}
+
+interface IAuthor {
+  id: string;
+  firstName: string;
+  lastName: string;
+}
+
+
+interface IProps {
+    course: ICourse;
+    authors: Array<IAuthor>;
+    actions: any;
+};
+
+interface IState {
+  course: ICourse;
+  errors: any;
+}
+
+
+class ManageCoursePage extends React.Component<IProps, IState> {
 
     constructor(props, context) {
         super(props, context);
@@ -38,23 +66,19 @@ class ManageCoursePage extends React.Component {
     }
 }
 
-ManageCoursePage.propTypes = {
-    course: PropTypes.object.isRequired,
-    authors: PropTypes.arrayOf(PropTypes.object)
-};
  
 
 const mapStateToProps = (state, ownProps) => {
-    let course= {id: '', watchHref: '', title: '', authorId: '', length: '', category: ''};
+    let course: ICourse = {id: '', watchHref: '', title: '', authorId: '', length: '', category: ''};
     return {
         course: course,
         authors: state.authors.map(author => ({value: author.id, text: author.firstName + ' ' + author.lastName}))
-    }; 
+    } as IProps; 
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        actions: bindActionCreators(courseActions, dispatch)
+        actions: bindActionCreators({...courseActions}, dispatch)
     };
 };
 

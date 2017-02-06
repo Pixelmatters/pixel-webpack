@@ -1,8 +1,17 @@
-import React, {PropTypes} from 'react';
+import * as React from 'react';
 import TextInput from '../common/TextInput';
 import SelectInput from '../common/SelectInput';
 
-const CourseForm = ({course, allAuthors, onSave, onChange, loading, errors}) => {
+interface IProps {
+  course: any;
+  allAuthors: Array<any>;
+  onSave?: any;
+  onChange: any;
+  loading?: boolean;
+  errors: any;
+}
+
+const CourseForm = ({course, allAuthors, onSave, onChange, loading, errors}: IProps) => {
     return (
         <form>
             <h1>Manage Course</h1>
@@ -41,13 +50,13 @@ const CourseForm = ({course, allAuthors, onSave, onChange, loading, errors}) => 
     );
 };
 
-CourseForm.propTypes = {
-    course: PropTypes.object.isRequired,
-    allAuthors: PropTypes.array,
-    onSave: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired,
-    loading: PropTypes.bool.isRequired,
-    errors: PropTypes.object
-};
+// CourseForm.propTypes = {
+//     course: PropTypes.object.isRequired,
+//     allAuthors: PropTypes.array,
+//     onSave: PropTypes.func.isRequired,
+//     onChange: PropTypes.func.isRequired,
+//     loading: PropTypes.bool.isRequired,
+//     errors: PropTypes.object
+// };
 
 export default CourseForm;
