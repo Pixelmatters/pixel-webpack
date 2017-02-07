@@ -31,7 +31,7 @@ export  default class ExamplePage extends React.Component<any, any> {
     validateAsyncFalse(form: FormControl) {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve(false)
+          resolve(true)
         },500)
       })
     }

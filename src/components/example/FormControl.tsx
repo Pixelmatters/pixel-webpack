@@ -13,14 +13,13 @@ export interface IFormState {
   value: string;
 }
 
-interface IFormValidator {
+interface IFormValidatorSync {
   (f: FormControl): boolean;
 }
 
 interface IFormValidatorAsync {
   (f: FormControl): Promise<Boolean>;
 }
-
 
 export interface IFormProps {
   name: string;
@@ -31,7 +30,7 @@ export interface IFormProps {
   focusPlaceholder?: string;
   value?: string;
   debounce?: number;
-  validators?: Array<IFormValidator>;
+  validators?: Array<IFormValidatorSync>;
   validatorsAsync?: Array<IFormValidatorAsync>;
   valueToDisplay?: (value) => string;
   onChange?: (event: any) => boolean;
@@ -59,7 +58,7 @@ export default class FormControl extends React.Component<IFormProps, IFormState>
 
     this.validateDebounce =
      _.debounce(() => {
-      this.validate(this.props.validators);
+      this.validate();
       }, this.debounce); 
     
   }
@@ -107,14 +106,14 @@ export default class FormControl extends React.Component<IFormProps, IFormState>
       this.setState({value: event.target.value}, this.validateDebounce.bind(this));
     }
     this.setState({dirty: true});
-    this.validateAsync(this.props.validatorsAsync);
+    // this.validateAsync(this.props.validatorsAsync);
   }
 
-  validateNew() {
-    let validSync = this.validate(this.props.validators)
+  validate() {
+    let validSync = this.validateSync();
     if(validSync && this.props.validatorsAsync) {
       this.setState({loading: true})
-      this.validateAsync(this.props.validatorsAsync).then((validAsync) => {
+      this.validateAsync().then((validAsync) => {
         this.setState({valid: validAsync});    
         this.setState({loading: false})
       })
@@ -123,20 +122,25 @@ export default class FormControl extends React.Component<IFormProps, IFormState>
     }
   }
 
-  validate(validators: Array<IFormValidator>): boolean {
+  validateSync(): boolean {
 
-    return validators.reduce((acc, validator) => {
+    return this.props.validators.reduce((acc, validator) => {
       return acc && validator.call(this, this);
     }, true);
   }
 
-  validateAsync(validators: Array<IFormValidatorAsync>): Promise<boolean> {
+  reduceBooleanArray(arr: Array<boolean>) {
+    return arr.reduce((acc, item) => {
+      return acc && item;
+    }, true);
+  }
+
+  validateAsync(): Promise<boolean> {
     let _arr = [];
-    _arr = validators.map((val) => val.call(this, this))
+    _arr = this.props.validatorsAsync.map((val) => val.call(this, this))
 
     return Promise.all(_arr).then((arr) => {
-      console.log('res',arr)
-      return true;
+      return this.reduceBooleanArray(arr);
     })
     .catch((error) => {
       console.error(error);
@@ -159,6 +163,10 @@ export default class FormControl extends React.Component<IFormProps, IFormState>
     this.setState({focus: false})
   }
 
+  get loading() {
+    return this.state.loading;
+  }
+
   render() {
     console.log('Render', this.state);
     return (
@@ -178,6 +186,7 @@ export default class FormControl extends React.Component<IFormProps, IFormState>
             
             />
           {/*{error && <div className="alert alert-danger">{error}</div>}*/}
+          { this.loading && <i className="glyphicon glyphicon-refresh spinning"></i> }
         </div>
       </div>  
     );
