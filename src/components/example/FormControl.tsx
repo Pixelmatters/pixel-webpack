@@ -1,7 +1,6 @@
 import * as React from 'react';
+import AbstractControl from './AbstractControl';
 import * as _ from 'lodash';
-
-const DEFAULT_DEBOUNCE_TIMEOUT = 400;
 
 export interface IFormControlState {
   valid?: boolean;
@@ -23,7 +22,6 @@ interface IFormValidatorAsync {
 
 export interface IFormControlProps {
   name: string;
-  
   label?: string;
   type?: 'text' | 'password';
   placeholder?: string;
@@ -39,13 +37,14 @@ export interface IFormControlProps {
 }
 
 
-export default class FormControl extends React.Component<IFormControlProps, IFormControlState> {
+export default class FormControl extends AbstractControl {
 
   validateDebounce: Function;
 
   constructor(props: IFormControlProps, context) {
     super(props, context);
 
+    // set initial state
     this.state = {
       valid: true,
       focus: false,
@@ -56,6 +55,7 @@ export default class FormControl extends React.Component<IFormControlProps, IFor
       value: ''
     }
 
+    // debounce validate function
     this.validateDebounce =
      _.debounce(() => {
       this.validate();
@@ -63,34 +63,7 @@ export default class FormControl extends React.Component<IFormControlProps, IFor
     
   }
 
-  /**
-   * get placeholder or focus placeholder
-   */
-  get placeholder(): string {
-    if (this.state.focus && this.props.focusPlaceholder) {
-      return this.props.focusPlaceholder;
-    }
-    return this.props.placeholder;
-  }
-
-  /**
-   * get debounce timeout if not defined returns DEFAULT_DEBOUNCE_TIMEOUT
-   */
-  get debounce() {
-    return this.props.debounce || DEFAULT_DEBOUNCE_TIMEOUT;
-  }
-
-  /**
-   * Get value to be displayed.
-   * If valueToDisplay function is defined it will return the result of it execution.
-   */
-  get displayValue(): string {
-    if(this.props.valueToDisplay) {
-      return this.props.valueToDisplay(this.state.value)
-    }
-    return this.state.value
-  }
-
+  // get wrapper class
   get wrapperClass() {
     if(this.state.valid) {
       return 'form-group'
@@ -99,29 +72,24 @@ export default class FormControl extends React.Component<IFormControlProps, IFor
     }
   }
 
-  get label() {
-    return this.props.label ? this.props.label : this.props.name;
-  }
-
+  /**
+   * Change the state
+   */
   onChange(event) {
     this.setState({value: event.target.value}, this.validateDebounce.bind(this));
-    this.setState({dirty: true}, () => this.notifyParent());
+    if (!this.state.dirty) {
+      this.setState({dirty: true}, () => this.notifyParent());
+    }
   }
 
-  notifyParent() {
-    if(this.props.onChange) {
-      this.props.onChange(this.state, this.props.name);
-    } 
-  }
-
-  get validatorsAsync() {
-    return this.props.validatorsAsync || []
-  }
-
-  get validators() {
-    return this.props.validators || []
-  }
-
+  /**
+   * validate sync validators
+   * if has async validators
+   * set loading to true
+   * validate all async validators
+   * set valid state
+   * set loading to false
+   */
   validate() {
     let validSync = this.validateSync();
     if(validSync && this.validatorsAsync.length > 0) {
@@ -134,61 +102,6 @@ export default class FormControl extends React.Component<IFormControlProps, IFor
     } else {
       this.setState({valid: validSync}, () => this.notifyParent());    
     }
-  }
-
-  validateSync(): boolean {
-    return this.validators.reduce((acc, validator) => {
-      return acc && validator.call(this, this);
-    }, true);
-  }
-
-  reduceBooleanArray(arr: Array<boolean>) {
-    return arr.reduce((acc, item) => {
-      return acc && item;
-    }, true);
-  }
-
-  validateAsync(): Promise<boolean> {
-    let _arr = [];
-    _arr = this.props.validatorsAsync.map((val) => val.call(this, this))
-
-    return Promise.all(_arr).then((arr) => {
-      return this.reduceBooleanArray(arr);
-    })
-    .catch((error) => {
-      console.error(error);
-      return false;
-    })
-  }
-
-  onFocus(event) {
-    if(this.props.onFocus) {
-      this.props.onFocus(event);
-    } 
-    this.setState({focus: true}, ()=> this.notifyParent());
-    if(!this.state.touch) {
-      this.setState({touch: true}, ()=> this.notifyParent());
-    }
-    
-  }
-
-  onBlur(event) {
-    if(this.props.onBlur) {
-      this.props.onBlur(event);
-    } 
-    this.setState({focus: false}, ()=> this.notifyParent())
-  }
-
-  get loading() {
-    return this.state.loading;
-  }
-
-  getState() {
-    return this.state;
-  }
-
-  componentDidMount() {
-    this.notifyParent();
   }
 
   render() {
