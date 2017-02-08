@@ -2,6 +2,7 @@ import * as React from 'react';
 // import {connect} from 'react-redux';
 // import {bindActionCreators} from 'redux';
 import FormControl from './FormControl';
+import FormGroup from './FormGroup';
 
 
 export  default class ExamplePage extends React.Component<any, any> {
@@ -41,13 +42,38 @@ export  default class ExamplePage extends React.Component<any, any> {
             
             <div>
               <h1>Form Example Page</h1>
-              <FormControl 
-                name="test" 
-                placeholder="Some placeholder" 
-                focusPlaceholder="another placeholder"
-                validators={[this.validateRegExp]}
-                validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
-                ></FormControl>
+              <FormGroup name="login">
+                <FormControl 
+                  name="firtsName" 
+                  placeholder="Some placeholder" 
+                  focusPlaceholder="another placeholder"
+                  validators={[this.validateRegExp]}
+                  validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
+                  ></FormControl>
+                  <FormControl 
+                  name="LastName" 
+                  placeholder="Some placeholder" 
+                  focusPlaceholder="another placeholder"
+                  validators={[this.validateRegExp]}
+                  validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
+                  ></FormControl>
+                <FormGroup name="sublogin">
+                  <FormControl 
+                    name="firtsName" 
+                    placeholder="Some placeholder" 
+                    focusPlaceholder="another placeholder"
+                    validators={[this.validateRegExp]}
+                    validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
+                    ></FormControl>
+                    <FormControl 
+                    name="LastName" 
+                    placeholder="Some placeholder" 
+                    focusPlaceholder="another placeholder"
+                    validators={[this.validateRegExp]}
+                    validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
+                    ></FormControl>
+                  </FormGroup>
+              </FormGroup>
             </div>
         );
     }

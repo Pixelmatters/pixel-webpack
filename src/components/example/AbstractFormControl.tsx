@@ -1,4 +1,4 @@
-import * as React from 'react';
+/*import * as React from 'react';
 import * as _ from 'lodash';
 
 const DEFAULT_DEBOUNCE_TIMEOUT = 400;
@@ -39,7 +39,7 @@ export interface IFormControlProps {
 }
 
 
-export default class FormControl extends React.Component<IFormControlProps, IFormControlState> {
+export default class AbstractFormControl extends React.Component<IFormControlProps, IFormControlState> {
 
   validateDebounce: Function;
 
@@ -84,7 +84,7 @@ export default class FormControl extends React.Component<IFormControlProps, IFor
    * Get value to be displayed.
    * If valueToDisplay function is defined it will return the result of it execution.
    */
-  get displayValue(): string {
+  get value(): string {
     if(this.props.valueToDisplay) {
       return this.props.valueToDisplay(this.state.value)
     }
@@ -114,17 +114,9 @@ export default class FormControl extends React.Component<IFormControlProps, IFor
     } 
   }
 
-  get validatorsAsync() {
-    return this.props.validatorsAsync || []
-  }
-
-  get validators() {
-    return this.props.validators || []
-  }
-
   validate() {
     let validSync = this.validateSync();
-    if(validSync && this.validatorsAsync.length > 0) {
+    if(validSync && this.props.validatorsAsync) {
       this.setState({loading: true}, () => this.notifyParent())
       this.validateAsync().then((validAsync) => {
         this.setState({valid: validAsync}, () => this.notifyParent());    
@@ -137,7 +129,7 @@ export default class FormControl extends React.Component<IFormControlProps, IFor
   }
 
   validateSync(): boolean {
-    return this.validators.reduce((acc, validator) => {
+    return this.props.validators.reduce((acc, validator) => {
       return acc && validator.call(this, this);
     }, true);
   }
@@ -165,11 +157,8 @@ export default class FormControl extends React.Component<IFormControlProps, IFor
     if(this.props.onFocus) {
       this.props.onFocus(event);
     } 
-    this.setState({focus: true}, ()=> this.notifyParent());
-    if(!this.state.touch) {
-      this.setState({touch: true}, ()=> this.notifyParent());
-    }
-    
+    this.setState({focus: true});
+    this.setState({touch: true});
   }
 
   onBlur(event) {
@@ -187,10 +176,6 @@ export default class FormControl extends React.Component<IFormControlProps, IFor
     return this.state;
   }
 
-  componentDidMount() {
-    this.notifyParent();
-  }
-
   render() {
     return (
       <div className={this.wrapperClass}>
@@ -202,7 +187,7 @@ export default class FormControl extends React.Component<IFormControlProps, IFor
             name={this.props.name}
             className="form-control"
             placeholder={this.placeholder}
-            value={this.displayValue}
+            value={this.value}
             onChange={this.onChange.bind(this)} 
             onFocus={this.onFocus.bind(this)} 
             onBlur={this.onBlur.bind(this)} 
@@ -287,4 +272,4 @@ FormGroup
 
   Inputs: Array<AbstractControl>
   validations Function(g: FormGroup)
-  async validations ???????*/
+  async validations ???????*/*/
