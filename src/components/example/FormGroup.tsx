@@ -138,9 +138,15 @@ export default class FormGroup extends AbstractControl {
         }
       };
 
-      return React.cloneElement(child, {
-        onChange: this.onChange.bind(this)
-      })
+      if(child.type.name === 'FormGroup' || child.type.name === 'FormControl' ) {
+        return React.cloneElement(child, {
+          onChange: this.onChange.bind(this)
+        })
+      } else {
+        return React.cloneElement(child);
+      }
+        
+
     })
 
     this.setState(_state, () => this.notifyParent());

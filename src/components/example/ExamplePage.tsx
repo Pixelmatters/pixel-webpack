@@ -50,6 +50,7 @@ export  default class ExamplePage extends React.Component<any, any> {
                   validators={[this.validateRegExp]}
                   validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
                   ></FormControl>
+                  <h1>Other element</h1>
                   <FormControl 
                   name="LastName" 
                   placeholder="Some placeholder" 
