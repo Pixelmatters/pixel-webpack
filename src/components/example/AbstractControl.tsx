@@ -93,7 +93,6 @@ export default class AbstractControl extends React.Component<IAbstractControlPro
     return this.state.value
   }
 
-
  /**
  * Execute onChange to notify parent of a state change
  */

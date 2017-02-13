@@ -44,35 +44,41 @@ export  default class ExamplePage extends React.Component<any, any> {
               <h1>Form Example Page</h1>
               <FormGroup name="login">
                 <FormControl 
-                  name="firtsName" 
+                  name="firstName" 
                   placeholder="Some placeholder" 
                   focusPlaceholder="another placeholder"
                   validators={[this.validateRegExp]}
                   validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
                   ></FormControl>
-                  <h1>Other element</h1>
                   <FormControl 
-                  name="LastName" 
-                  placeholder="Some placeholder" 
-                  focusPlaceholder="another placeholder"
-                  validators={[this.validateRegExp]}
-                  validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
-                  ></FormControl>
-                <FormGroup name="sublogin">
-                  <FormControl 
-                    name="firtsName" 
-                    placeholder="Some placeholder" 
-                    focusPlaceholder="another placeholder"
-                    validators={[this.validateRegExp]}
-                    validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
-                    ></FormControl>
-                    <FormControl 
                     name="LastName" 
                     placeholder="Some placeholder" 
                     focusPlaceholder="another placeholder"
                     validators={[this.validateRegExp]}
                     validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
                     ></FormControl>
+                  {/*<div>
+                    <h1>Other element</h1>
+                    
+                  </div>*/}
+                  
+                <FormGroup name="sublogin">
+                  <FormControl 
+                    name="subFirstName" 
+                    placeholder="Some placeholder" 
+                    focusPlaceholder="another placeholder"
+                    validators={[this.validateRegExp]}
+                    validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
+                    ></FormControl>
+                    <div>
+                      <FormControl 
+                      name="subLastName" 
+                      placeholder="Some placeholder" 
+                      focusPlaceholder="another placeholder"
+                      validators={[this.validateRegExp]}
+                      validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
+                      ></FormControl>
+                    </div>
                   </FormGroup>
               </FormGroup>
             </div>

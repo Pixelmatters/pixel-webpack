@@ -13,6 +13,14 @@ export interface IFormGroupState {
   controls: any;
 }
 
+interface IChild {
+  children: Array<any>;
+  onChange: Function;
+  name: string;
+  value?: any;
+  state: any;
+}
+
 interface IFormGroupValidatorSync {
   (g: FormGroup): boolean;
 }
@@ -108,13 +116,15 @@ export default class FormGroup extends AbstractControl {
    * set state and valus for the forms group
    * notify parent
    */
-  componentDidMount() {
+  /*componentDidMount() {
 
     let _state = {
       controls: {}
     };
 
     this.childrenWithProps = React.Children.map(this.props.children, (child: any) => {
+
+      console.log(child);
 
       let state = {
         valid: true,
@@ -151,6 +161,111 @@ export default class FormGroup extends AbstractControl {
 
     this.setState(_state, () => this.notifyParent());
   }
+
+  render() {
+
+    return (
+      <div
+        onFocus={this.onFocus.bind(this)}
+        onBlur={this.onBlur.bind(this)}
+      >
+        <hr />
+        {this.childrenWithProps}
+        <hr />
+      </div>
+    )
+  }*/
+
+  recursiveCloneChildren(children: any, state: any) {
+
+    // debugger
+
+    return React.Children.map(children, (child: React.ReactElement<IChild>) => {
+
+      // debugger
+
+      // console.log(child);
+
+      if (!React.isValidElement(child)) return child;
+
+      const childProps: any = {};
+
+      if (_.get(child,'type.name','') === 'FormGroup') {
+        state = {
+          ...state,
+          controls: {
+            ...state.controls,
+            [child.props.name]: {
+              valid: true,
+              focus: false,
+              touch: false,
+              dirty: false,
+              enable: true,
+              loading: false,
+              value: child.props.value || '',
+              controls: {}
+            }
+          }
+        };
+      }
+
+       if(_.get(child,'type.name','') === 'FormControl') {
+         state = {
+          ...state,
+          controls: {
+            ...state.controls,
+            [child.props.name]: {
+              valid: true,
+              focus: false,
+              touch: false,
+              dirty: false,
+              enable: true,
+              loading: false,
+              value: child.props.value || ''
+            }
+          }
+        };
+       }
+
+      if(_.get(child,'type.name','') === 'FormGroup' ) {
+        childProps.children = this.recursiveCloneChildren(child.props.children, state.controls[child.props.name]);
+      }
+
+      if (_.get(child,'type.name','') === 'FormControl' || _.get(child,'type.name','') === 'FormGroup') {
+        childProps.onChange = this.onChange.bind(this);
+        return React.cloneElement(child, childProps)
+      }
+    
+      if(!_.get(child,'props.chilren',undefined)) {
+        
+        childProps.children = this.recursiveCloneChildren(child.props.children, state);
+      }
+      
+      return React.cloneElement(child, childProps);
+    })
+  }
+
+  componentDidMount() {
+
+    let _state = this.state || {
+      valid: true,
+      focus: false,
+      touch: false,
+      dirty: false,
+      enable: true,
+      loading: false,
+      controls: {},
+      value: ''
+    };
+
+    this.childrenWithProps = this.recursiveCloneChildren(this.props.children, _state);
+    this.setState(_state, () => this.notifyParent());
+
+    console.log('FormGroup', this.props.name, _state)
+    
+  }
+
+
 
   render() {
 

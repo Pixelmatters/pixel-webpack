@@ -42,7 +42,7 @@ export default class FormControl extends AbstractControl {
   validateDebounce: Function;
 
   constructor(props: IFormControlProps, context) {
-    super(props, context);
+    super(props, context);    
 
     // set initial state
     this.state = {
