@@ -100,6 +100,7 @@ export default class FormGroup extends AbstractControl {
 
     this.setState(
       {
+        ...state,
         controls: {
           ...this.state.controls,
           [name]: state
@@ -178,22 +179,17 @@ export default class FormGroup extends AbstractControl {
 
   recursiveCloneChildren(children: any, state: any) {
 
-    // debugger
-
     return React.Children.map(children, (child: React.ReactElement<IChild>) => {
 
-      // debugger
-
-      // console.log(child);
+      console.log(child.props.name)
 
       if (!React.isValidElement(child)) return child;
 
       const childProps: any = {};
 
       if (_.get(child,'type.name','') === 'FormGroup') {
-        state = {
-          ...state,
-          controls: {
+        
+        state.controls = {
             ...state.controls,
             [child.props.name]: {
               valid: true,
@@ -205,14 +201,11 @@ export default class FormGroup extends AbstractControl {
               value: child.props.value || '',
               controls: {}
             }
-          }
-        };
+          };
       }
 
        if(_.get(child,'type.name','') === 'FormControl') {
-         state = {
-          ...state,
-          controls: {
+         state.controls = {
             ...state.controls,
             [child.props.name]: {
               valid: true,
@@ -223,8 +216,7 @@ export default class FormGroup extends AbstractControl {
               loading: false,
               value: child.props.value || ''
             }
-          }
-        };
+          };
        }
 
       if(_.get(child,'type.name','') === 'FormGroup' ) {
@@ -260,8 +252,6 @@ export default class FormGroup extends AbstractControl {
 
     this.childrenWithProps = this.recursiveCloneChildren(this.props.children, _state);
     this.setState(_state, () => this.notifyParent());
-
-    console.log('FormGroup', this.props.name, _state)
     
   }
 

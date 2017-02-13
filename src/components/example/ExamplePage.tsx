@@ -63,6 +63,7 @@ export  default class ExamplePage extends React.Component<any, any> {
                   </div>*/}
                   
                 <FormGroup name="sublogin">
+                  <div><div>
                   <FormControl 
                     name="subFirstName" 
                     placeholder="Some placeholder" 
@@ -70,15 +71,15 @@ export  default class ExamplePage extends React.Component<any, any> {
                     validators={[this.validateRegExp]}
                     validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
                     ></FormControl>
-                    <div>
-                      <FormControl 
-                      name="subLastName" 
-                      placeholder="Some placeholder" 
-                      focusPlaceholder="another placeholder"
-                      validators={[this.validateRegExp]}
-                      validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
-                      ></FormControl>
-                    </div>
+                    
+                    <FormControl 
+                    name="subLastName" 
+                    placeholder="Some placeholder" 
+                    focusPlaceholder="another placeholder"
+                    validators={[this.validateRegExp]}
+                    validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
+                    ></FormControl>
+                  </div></div>
                   </FormGroup>
               </FormGroup>
             </div>
