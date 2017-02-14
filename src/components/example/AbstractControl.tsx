@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 
-const DEFAULT_DEBOUNCE_TIMEOUT = 400;
+export const DEFAULT_DEBOUNCE_TIMEOUT = 400;
 
 export interface IAbstractControlState {
   valid?: boolean;
@@ -50,7 +50,7 @@ export default class AbstractControl extends React.Component<IAbstractControlPro
    * get placeholder or focus placeholder
    */
   get placeholder(): string {
-    if (this.state.focus && this.props.focusPlaceholder) {
+    if (this.state && this.state.focus && this.props.focusPlaceholder) {
       return this.props.focusPlaceholder;
     }
     return this.props.placeholder;
