@@ -181,8 +181,6 @@ export default class FormGroup extends AbstractControl {
 
     return React.Children.map(children, (child: React.ReactElement<IChild>) => {
 
-      console.log(child.props.name)
-
       if (!React.isValidElement(child)) return child;
 
       const childProps: any = {};
