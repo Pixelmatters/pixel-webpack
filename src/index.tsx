@@ -12,8 +12,7 @@ const store = configureStore();
 store.dispatch(courseActions.loadCourses());
 store.dispatch(authorActions.loadAuthors());
 
-// import './styles.scss';
-// import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import './style.scss';
 
 render(
     <Provider store= {store}>
