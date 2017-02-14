@@ -70,6 +70,7 @@ const webpackConfig = {
     chunkFilename: '[id].[name].[hash].js'
   },
   resolve: {
+    root: [path.resolve(__dirname, '..', 'src')],
     extensions: ['', '.ts', '.js', '.tsx', '.html'],
     fallback: ['./node_modules']
   },

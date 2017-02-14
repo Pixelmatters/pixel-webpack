@@ -1,7 +1,8 @@
 import * as React from 'react';
 // import {connect} from 'react-redux';
 // import {bindActionCreators} from 'redux';
-import FormControl from './FormControl';
+// import FormControl from 'src/components/example/FormControl';
+import FormControl from 'components/example/FormControl';
 import FormGroup from './FormGroup';
 
 
