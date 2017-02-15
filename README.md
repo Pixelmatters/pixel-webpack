@@ -1,2 +1,2 @@
-# wepackConfig
-tests with webpack config
+# pixel-webpack
+Webpack stuff of Pixelmatters
