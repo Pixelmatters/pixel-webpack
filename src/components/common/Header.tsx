@@ -9,8 +9,10 @@ const Header = () => {
             <Link to="/about" activeClassName="active">About</Link>
             {" | "}
             <Link to="/courses" activeClassName="active">Courses</Link>
+            {" | "}
+            <Link to="/example" activeClassName="active">Example</Link>
         </nav>
     );
 };
 
-export default Header;
+export default Header;  

@@ -23,15 +23,15 @@ const loaders = [
     loader: 'url',
     query: {
       limit: 500,
-      name: `/${config.build.assetsSubDirectory}/images/[name].[hash:7].[ext]`
+      name: `${config.build.assetsSubDirectory}/images/[name].[hash:7].[ext]`
     }
   },
   {
-    test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+    test: /\.(woff2?|eot|ttf|otf|svg)(\?.*)?$/,
     loader: 'url',
     query: {
       limit: 10000,
-      name: '/${config.build.assetsSubDirectory}/fonts/[name].[hash:7].[ext]'
+      name: `${config.build.assetsSubDirectory}/fonts/[name].[hash:7].[ext]`
     }
   },
   {
@@ -70,6 +70,7 @@ const webpackConfig = {
     chunkFilename: '[id].[name].[hash].js'
   },
   resolve: {
+    root: [path.resolve(__dirname, '..', 'src')],
     extensions: ['', '.ts', '.js', '.tsx', '.html'],
     fallback: ['./node_modules']
   },
