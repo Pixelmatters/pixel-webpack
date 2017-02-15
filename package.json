@@ -8,14 +8,14 @@
     "build:server": "node_modules/.bin/http-server dist/",
     "build": "node config/build.js",
     "remap": "./node_modules/.bin/remap-istanbul --input ./coverage/coverage-final.json --output ./coverage/remapped --type html",
-    "test": "node_modules/.bin/karma start; npm run remap",
+    "test": "jest --coverage; npm run remap",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
     "doc": "node_modules/.bin/typedoc ./app/ --exclude app/**/*.spec.ts --ignoreCompilerErrors --excludeExternals --experimentalDecorators --target ES5 --out ./doc",
     "mock_data": "node mock/generate_members.js"
   },
   "jest": {
     "transform": {
-      "^.+\\.(ts|tsx)$": "typescript-babel-jest"
+      "^.+\\.(ts|tsx)$": "./node_modules/ts-jest/preprocessor.js"
     },
     "moduleFileExtensions": [
       "ts",
@@ -75,12 +75,13 @@
     "ora": "^1.1.0",
     "postcss-loader": "^1.2.2",
     "react-addons-test-utils": "^15.4.2",
+    "remap-istanbul": "^0.9.1",
     "sass-loader": "^4.1.1",
     "shelljs": "^0.7.6",
     "style-loader": "^0.13.1",
+    "ts-jest": "^18.0.3",
     "ts-loader": "^2.0.0",
     "typescript": "^2.1.5",
-    "typescript-babel-jest": "^1.0.1",
     "url-loader": "^0.5.7",
     "webpack": "1.13.2",
     "webpack-dev-middleware": "^1.10.0",

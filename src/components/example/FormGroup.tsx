@@ -40,6 +40,7 @@ export default class FormGroup extends AbstractControl {
 
   childrenWithProps: any;
   validateDebounce: Function;
+  myRef: Array<any>;
 
   constructor(props: IFormGroupProps, context) {
     super(props, context);
@@ -55,6 +56,8 @@ export default class FormGroup extends AbstractControl {
       value: {},
       controls: {}
     }
+
+    this.myRef = [];
 
     // debounce validate function
     this.validateDebounce =
@@ -177,9 +180,21 @@ export default class FormGroup extends AbstractControl {
     )
   }*/
 
+  onNext(name: string) {
+    const myItem = this.myRef.filter((item) => item.name === name)[0];
+    const myIndex = this.myRef.indexOf(myItem)
+
+    this.myRef[myIndex+1].ref.focus();
+
+    this.props.onNext()
+
+  }
+
   recursiveCloneChildren(children: any, state: any) {
 
     return React.Children.map(children, (child: React.ReactElement<IChild>) => {
+
+      console.log(child)
 
       if (!React.isValidElement(child)) return child;
 
@@ -223,6 +238,11 @@ export default class FormGroup extends AbstractControl {
 
       if (_.get(child,'type.name','') === 'FormControl' || _.get(child,'type.name','') === 'FormGroup') {
         childProps.onChange = this.onChange.bind(this);
+
+        childProps.ref= (input) => {this.myRef.push({name: child.props.name, ref: input}) };
+
+        childProps.onNext = this.onNext.bind(this, child.props.name);
+
         return React.cloneElement(child, childProps)
       }
     
@@ -256,7 +276,7 @@ export default class FormGroup extends AbstractControl {
 
 
   render() {
-
+    console.log(this.myRef)
     return (
       <div
         onFocus={this.onFocus.bind(this)}

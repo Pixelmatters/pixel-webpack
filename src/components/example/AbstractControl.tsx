@@ -39,6 +39,7 @@ export interface IAbstractControlProps {
   onChange?: (state: IAbstractControlState, name: string) => boolean;
   onBlur?: (event: any) => boolean;
   onFocus?: (event: any) => boolean;
+  onNext?: any;
 }
 
 export default class AbstractControl extends React.Component<IAbstractControlProps, IAbstractControlState> {
@@ -150,6 +151,8 @@ export default class AbstractControl extends React.Component<IAbstractControlPro
       this.props.onBlur(event);
     } 
     this.setState({focus: false}, ()=> this.notifyParent())
+    debugger
+    this.props.onNext();
   }
 
   get loading() {

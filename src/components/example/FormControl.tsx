@@ -40,6 +40,7 @@ export interface IFormControlProps {
 export default class FormControl extends AbstractControl {
 
   validateDebounce: Function;
+  inputControl: HTMLInputElement;
 
   constructor(props: IFormControlProps, context) {
     super(props, context);    
@@ -104,6 +105,10 @@ export default class FormControl extends AbstractControl {
     }
   }
 
+  focus() {
+    this.inputControl.focus();
+  }
+
   render() {
     return (
       <div className={this.wrapperClass}>
@@ -113,6 +118,7 @@ export default class FormControl extends AbstractControl {
           <input
             type={this.props.type}
             name={this.props.name}
+            ref={(input) => {this.inputControl = input}}
             className="form-control"
             placeholder={this.placeholder}
             value={this.displayValue}
