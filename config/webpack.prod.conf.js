@@ -59,7 +59,7 @@ const plugins = [
   new webpack.IgnorePlugin(/spec\.(js|ts)$/)
 ];
 
-if(gzip) {
+if(config.build.productionGzip) {
   plugins.push(
     new CompressionWebpackPlugin({
       asset: '[path].gz[query]',
