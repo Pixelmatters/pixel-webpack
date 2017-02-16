@@ -3,6 +3,7 @@ import AbstractControl from './AbstractControl';
 import * as _ from 'lodash';
 
 export interface IFormControlState {
+  name: string;
   valid?: boolean;
   focus?: boolean;
   touch?: boolean;
@@ -39,14 +40,12 @@ export interface IFormControlProps {
 
 export default class FormControl extends AbstractControl {
 
-  validateDebounce: Function;
-  inputControl: HTMLInputElement;
-
   constructor(props: IFormControlProps, context) {
     super(props, context);    
 
     // set initial state
     this.state = {
+      name: this.props.name,
       valid: true,
       focus: false,
       touch: false,
@@ -55,12 +54,6 @@ export default class FormControl extends AbstractControl {
       loading: false,
       value: ''
     }
-
-    // debounce validate function
-    this.validateDebounce =
-     _.debounce(() => {
-      this.validate();
-      }, this.debounce); 
     
   }
 
@@ -105,10 +98,6 @@ export default class FormControl extends AbstractControl {
     }
   }
 
-  focus() {
-    this.inputControl.focus();
-  }
-
   render() {
     return (
       <div className={this.wrapperClass}>
@@ -118,7 +107,6 @@ export default class FormControl extends AbstractControl {
           <input
             type={this.props.type}
             name={this.props.name}
-            ref={(input) => {this.inputControl = input}}
             className="form-control"
             placeholder={this.placeholder}
             value={this.displayValue}
@@ -135,75 +123,3 @@ export default class FormControl extends AbstractControl {
   }
 
 }
-
-
-
-// FormGroup
-
-// { valid: false
-//   name: value
-//   name: value
-//   name : {
-//     valid: false
-//     firtName: {value, valid false, dirty}
-//     lastNAme: value
-//   }
-// }
-
-
-
-/*AbstractControl
-
-  name: string;
-  type?: InputType;
-  
-  errors?: Array<string>;
-  
-  value?: any;
-  valueToDisplay?: string;
-
-  placeholders?: Array<string>;
-  focusPlaceholder?: string;
-  
-  debounce?: number; //input change
-
-  editable?: boolean; //enable | disable
-  icon?: InputIcon;
-  
-  pickerValues?: Array<any>; // Select
-
-  passwordStrength?: number;
-  rightButton?: IFormInputRightButton;
-  async?: IFormInputAsync; Function(f: FormControl) return promise // usar o debound do input
-  validations?: Array<IFormInputValidation>;  Function(f: FormControl)
-  returnKeyType?: Function;
-
-  // set on <form> and <formInput> components
-  formName: string;
-  inputValue?: any;
-  bottomBorder?: boolean;
-  rightButtonAction?: Function;
-  onSubmitEditing?: Function;
-  onFocus?: Function;
-  onBlur?: Function;
-  dispatch?: Function;
-
-
-FormControl
-
-  InputText
-  InputPassword
-  InputSelect
-  InputDate
-  InputRigthButton
-
-FormGroup
-  
-  valid
-  icon
-  touched
-  dirty
-
-  Inputs: Array<AbstractControl>
-  validations Function(g: FormGroup)
-  async validations ???????*/

@@ -4,86 +4,103 @@ import * as React from 'react';
 // import FormControl from 'src/components/example/FormControl';
 import FormControl from 'components/example/FormControl';
 import FormGroup from './FormGroup';
+import FormArray from './FormArray';
 
 
-export  default class ExamplePage extends React.Component<any, any> {
+export default class ExamplePage extends React.Component<any, any> {
 
-    constructor(props, context) {
-        super(props, context);
+  arr: Array<number>
+
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      arr : [0, 1]
     }
+  }
 
-    formatValue(value: string) {
-      return `## ${value} ##`;
-    }
+  formatValue(value: string) {
+    return `## ${value} ##`;
+  }
 
-    validateRegExp(form: FormControl) {
-      const _res = form.state.value.match(/abc/);
+  validateRegExp(form: FormControl) {
+    const _res = form.state.value.match(/abc/);
 
-      return _res !== null && _res.length !==0
-    }
+    return _res !== null && _res.length !== 0
+  }
 
-    validateAsyncTrue(form: FormControl) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(true)
-        },500)
-      })
-    }
+  validateAsyncTrue(form: FormControl) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(true)
+      }, 500)
+    })
+  }
 
-    validateAsyncFalse(form: FormControl) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(true)
-        },500)
-      })
-    }
+  validateAsyncFalse(form: FormControl) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(true)
+      }, 500)
+    })
+  }
 
-    render () {
-        return (
-            
-            <div>
-              <h1>Form Example Page</h1>
-              <FormGroup name="login">
-                <FormControl 
-                  name="firstName" 
-                  placeholder="Some placeholder" 
-                  focusPlaceholder="another placeholder"
-                  validators={[this.validateRegExp]}
-                  validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
-                  ></FormControl>
-                  <FormControl 
-                    name="LastName" 
-                    placeholder="Some placeholder" 
-                    focusPlaceholder="another placeholder"
-                    validators={[this.validateRegExp]}
-                    validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
-                    ></FormControl>
-                  {/*<div>
-                    <h1>Other element</h1>
-                    
-                  </div>*/}
-                  
-                <FormGroup name="sublogin">
-                  <div><div>
-                  <FormControl 
-                    name="subFirstName" 
-                    placeholder="Some placeholder" 
-                    focusPlaceholder="another placeholder"
-                    validators={[this.validateRegExp]}
-                    validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
-                    ></FormControl>
-                    
-                    <FormControl 
-                    name="subLastName" 
-                    placeholder="Some placeholder" 
-                    focusPlaceholder="another placeholder"
-                    validators={[this.validateRegExp]}
-                    validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
-                    ></FormControl>
-                  </div></div>
+  add() {
+    this.setState({ arr : [...this.state.arr, this.state.arr.length]})
+    console.log(this.state.arr)
+    this.forceUpdate();
+  }
+
+  myArray() {
+    return this.state.arr;
+  }
+
+  render() {
+    console.log('Render')
+    return (
+
+      <div>
+        <button onClick={this.add.bind(this)}>add</button>
+        <h1>Form Example Page</h1>
+        <FormGroup name="login">
+          <FormControl
+            name="firstName"
+            placeholder="Some placeholder"
+            focusPlaceholder="another placeholder"
+            validators={[this.validateRegExp]}
+            validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
+          ></FormControl>
+
+          <FormArray name="todos">
+            {this.state.arr.map((item) => {
+              return (
+                <div className="row" key={item}>
+                  <FormGroup name={'subform' + item}>
+                    <div className="col-lg-6">
+                      <FormControl
+                        name="subFirstName"
+                        placeholder="Some placeholder"
+                        focusPlaceholder="another placeholder"
+                        validators={[this.validateRegExp]}
+                        validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
+                      ></FormControl>
+                    </div>
+
+                    <div className="col-lg-6">
+                      <FormControl
+                        name="subLastName"
+                        placeholder="Some placeholder"
+                        focusPlaceholder="another placeholder"
+                        validators={[this.validateRegExp]}
+                        validatorsAsync={[this.validateAsyncTrue, this.validateAsyncFalse]}
+                      ></FormControl>
+                    </div>
                   </FormGroup>
-              </FormGroup>
-            </div>
-        );
-    }
+                </div>
+              )
+            })}
+          </FormArray>
+        </FormGroup>
+      </div>
+    );
+  }
 }

@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 export const DEFAULT_DEBOUNCE_TIMEOUT = 400;
 
 export interface IAbstractControlState {
+  name: string;
   valid?: boolean;
   focus?: boolean;
   touch?: boolean;
@@ -14,6 +15,15 @@ export interface IAbstractControlState {
   value: any;
   
 }
+
+interface IChild {
+  children: Array<any>;
+  onChange: Function;
+  name: string;
+  value?: any;
+  state: any;
+}
+
 
 interface IAbstractControlValidatorSync {
   (f: AbstractControl): boolean;
@@ -26,6 +36,7 @@ interface IAbstractControlValidatorAsync {
 
 export interface IAbstractControlProps {
   name: string;
+  array?: Array<any>;
   label?: string;
   type?: 'text' | 'password';
   placeholder?: string;
@@ -39,12 +50,19 @@ export interface IAbstractControlProps {
   onChange?: (state: IAbstractControlState, name: string) => boolean;
   onBlur?: (event: any) => boolean;
   onFocus?: (event: any) => boolean;
-  onNext?: any;
 }
 
 export default class AbstractControl extends React.Component<IAbstractControlProps, IAbstractControlState> {
+
+  validateDebounce: Function;
+
   constructor(props: IAbstractControlProps, context) {
     super(props, context);
+
+    this.validateDebounce =
+      _.debounce(() => {
+        this.validate();
+      }, this.debounce);
   }
 
   /**
@@ -57,11 +75,15 @@ export default class AbstractControl extends React.Component<IAbstractControlPro
     return this.props.placeholder;
   }
 
+  validate(): void {
+    throw 'must be implemented';
+  }
+
   /**
    * get debounce timeout if not defined returns DEFAULT_DEBOUNCE_TIMEOUT
    */
   get debounce() {
-    return this.props.debounce || DEFAULT_DEBOUNCE_TIMEOUT;
+    return _.isNumber(this.props.debounce) ? this.props.debounce: DEFAULT_DEBOUNCE_TIMEOUT;
   }
 
   // helper function to reduce and array of booleans
@@ -151,8 +173,6 @@ export default class AbstractControl extends React.Component<IAbstractControlPro
       this.props.onBlur(event);
     } 
     this.setState({focus: false}, ()=> this.notifyParent())
-    debugger
-    this.props.onNext();
   }
 
   get loading() {
@@ -161,6 +181,144 @@ export default class AbstractControl extends React.Component<IAbstractControlPro
 
   componentDidMount() {
     this.notifyParent();
+  }
+
+  private getValueGroup(controls) {
+    let _value = {}
+    for (let key of Object.keys(controls)) {
+      _value[key] = controls[key].value ? controls[key].value : ''
+    }
+    return _value;
+  }
+
+  // helper function to get values from the controls
+  private getValueArray(controls) {
+    return controls.map((control) => control.value)
+  }
+
+  /**
+   * Change the state and notify the parent
+   * TODO set dirty and touch
+   */
+
+  onChangeGroup(state, name) {
+    let self = this;
+
+    let controls = {
+      ...this.state.controls,
+      [name]: state
+    };
+
+    this.setState(
+      {
+        ...this.state,
+        controls: controls,
+        value: self.getValueGroup(controls)
+      }, () => {
+        this.validateDebounce();
+        this.notifyParent();
+      });
+  }
+
+  onChangeArray(state, name) {
+    let self = this;
+
+    let controls = this.state.controls.map((control) => {
+      if(control.name === name) {
+        return state
+      }
+      return control
+    })
+
+    this.setState(
+      {
+        ...this.state,
+        controls: controls,
+        value: self.getValueArray(controls)
+      }, () => {
+        this.validateDebounce();
+        this.notifyParent();
+      });
+  }
+
+
+  recursiveCloneChildren(children: any, state: any, parentType: string ='other') {
+
+    return React.Children.map(children, (child: React.ReactElement<IChild>) => {
+
+      if (!React.isValidElement(child)) return child;
+
+      const childProps: any = _.cloneDeep(child.props);
+
+      const isFormGroup = _.get(child,'type.name','') === 'FormGroup';
+      const isFormControl = _.get(child,'type.name','') === 'FormControl';
+      const isFormArray = _.get(child,'type.name','') === 'FormArray';
+
+      let controlState: any = {
+        name: child.props.name,
+        valid: true,
+        focus: false,
+        touch: false,
+        dirty: false,
+        enable: true,
+        loading: false
+      };
+
+      if (isFormGroup) {
+        controlState.controls = {};
+        controlState.value = child.props.value || {};
+      }
+
+      if(isFormArray) {
+        controlState.controls = []
+        controlState.value = child.props.value || [];
+      }
+
+      if(isFormControl) {
+        controlState.value = '';
+      }
+
+
+      if (parentType === 'FormGroup' && (isFormArray || isFormGroup || isFormControl)) {
+        
+        state.controls = {
+            ...state.controls,
+            [child.props.name]: controlState
+          };
+      }
+
+      if (parentType === 'FormArray' && (isFormArray || isFormGroup || isFormControl)) {
+        state.controls.push(controlState);
+      }
+
+      if(isFormGroup) {
+        childProps.children = this.recursiveCloneChildren(child.props.children, controlState, 'FormGroup');
+      }
+
+      if(isFormArray) {
+        childProps.children = this.recursiveCloneChildren(child.props.children, controlState, 'FormArray');
+      }
+
+      if (isFormArray || isFormGroup || isFormControl) {
+        
+        if(parentType === 'FormArray') {
+          childProps.onChange = this.onChangeArray.bind(this);
+        }
+
+        if(parentType === 'FormGroup') {
+          childProps.onChange = this.onChangeGroup.bind(this);
+        }
+        
+        return React.cloneElement(child, childProps)
+      }
+    
+      if(!_.get(child,'props.chilren',undefined)) {
+        
+        childProps.children = this.recursiveCloneChildren(child.props.children, state, parentType);
+      }
+      
+      return React.cloneElement(child, childProps);
+    })
   }
 
   render() {
